@@ -1,0 +1,24 @@
+{
+  "databases" : [
+  {
+    "name" : "SPIRE study",
+    "url" : "https://spire.embl.de/api/study/item"
+  },
+  {
+    "name" : "SPIRE sample",
+    "url" : "https://spire.embl.de/api/sample/item"
+  },
+  {
+    "name" : "ENA xml records",
+    "url" : "https://www.ebi.ac.uk/ena/browser/api/xml/item"
+  },
+  {
+    "name" : "SRA Biosample",
+    "url" : "https://www.ncbi.nlm.nih.gov/biosample/item"
+  },
+  {
+    "name" : "SRA Bioproject",
+    "url" : "https://www.ncbi.nlm.nih.gov/bioproject/item"
+  }
+]
+}
