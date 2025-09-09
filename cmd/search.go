@@ -4,17 +4,47 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"strings"
 
-	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 )
 
-var (
-	logoStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("#01FAC6")).Bold(true)
-	tipMsgStyle    = lipgloss.NewStyle().PaddingLeft(1).Foreground(lipgloss.Color("190")).Italic(true)
-	endingMsgStyle = lipgloss.NewStyle().PaddingLeft(1).Foreground(lipgloss.Color("170")).Italic(true)
-)
+type Databases struct {
+	databases []Database `json:"databases"`
+}
+
+type Database struct {
+	name string `json:"name"`
+	url  string `json:"url"`
+}
+
+func loadDatabase(config string) Databases {
+	byteValue, err := os.ReadFile(config)
+	if err != nil {
+		log.Fatal(err)
+	}
+	var dbs Databases
+	json.Unmarshal(byteValue, &dbs)
+	return dbs
+
+}
+
+func defineQuery(term string, url string) string {
+	var query string = strings.ReplaceAll(url, "item", term)
+	return query
+}
+
+func searchDBs(item string, dbs Databases) {
+	for i := 0; i < len(dbs.databases); i++ {
+		var query string = defineQuery(item, dbs.databases[i].url)
+		go http.Get(query)
+	}
+}
 
 // searchCmd represents the search command
 var searchCmd = &cobra.Command{
