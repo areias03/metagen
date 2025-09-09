@@ -7,32 +7,45 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 
 	"github.com/areias03/metagen/api/db"
 	"github.com/spf13/cobra"
 )
+
+var wg sync.WaitGroup
 
 func defineQuery(term string, url string) string {
 	var query string = strings.ReplaceAll(url, "item", term)
 	return query
 }
 
-func searchDBs(item string, dbs db.Databases) {
-	for i := 0; i < len(dbs.Databases); i++ {
-		var query string = defineQuery(item, dbs.Databases[i].Url)
-		resp, err := http.Get(query)
-		if err != nil {
-			fmt.Println(err)
-		}
-		if resp.StatusCode != http.StatusOK || resp.ContentLength == 0 {
-			fmt.Println(query, "Not found!")
-		} else {
-			fmt.Println(query, "Found match!", resp.StatusCode, resp.ContentLength)
-		}
+func processQuery(query string) {
+	resp, err := http.Get(query)
+	if err != nil {
+		log.Fatal(err)
 	}
+	// body, err := io.ReadAll(resp.Body)
+	// resp.Body.Close()
+	if resp.StatusCode != http.StatusOK || resp.ContentLength != -1 {
+		fmt.Println(query, "Not found!", resp.StatusCode, resp.ContentLength)
+	} else {
+		fmt.Println(query, "Found match!", resp.StatusCode, resp.ContentLength)
+	}
+	wg.Done()
+}
+
+func searchDBs(item string, dbs db.Databases) {
+	for _, v := range dbs.Databases {
+		var query string = defineQuery(item, v.Url)
+		wg.Add(1)
+		go processQuery(query)
+	}
+	wg.Wait()
 }
 
 // searchCmd represents the search command
@@ -54,14 +67,14 @@ var searchCmd = &cobra.Command{
 
 		byteValue, err := io.ReadAll(jsonFile)
 		if err != nil {
-			fmt.Println(err)
+			log.Fatal(err)
 		}
 
 		var dbs db.Databases
 		// we unmarshal our byteArray which contains our
 		// jsonFile's content into 'users' which we defined above
 		json.Unmarshal(byteValue, &dbs)
-		searchDBs("SAMN0751003000000", dbs)
+		searchDBs("SAMN07510030", dbs)
 	},
 }
 
