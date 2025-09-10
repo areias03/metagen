@@ -1,6 +1,3 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -29,12 +26,10 @@ func processQuery(query string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// body, err := io.ReadAll(resp.Body)
-	// resp.Body.Close()
 	if resp.StatusCode != http.StatusOK || resp.ContentLength != -1 {
-		fmt.Println(query, "Not found!", resp.StatusCode, resp.ContentLength)
+		fmt.Println(query, "\t", "Not found!")
 	} else {
-		fmt.Println(query, "Found match!", resp.StatusCode, resp.ContentLength)
+		fmt.Println(query, "\t", "Found!")
 	}
 	wg.Done()
 }
@@ -59,9 +54,9 @@ var searchCmd = &cobra.Command{
 	This application is a tool to generate the needed files
 	to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		jsonFile, err := os.Open("api/db/databases.json")
+		jsonFile, err := os.Open("config/databases.json")
 		if err != nil {
-			fmt.Println(err)
+			log.Fatal(err)
 		}
 		defer jsonFile.Close()
 
