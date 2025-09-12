@@ -1,52 +1,20 @@
 package cmd
 
 import (
-	"encoding/json"
-	"fmt"
-	"io"
 	"log"
-	"net/http"
-	"os"
-	"strings"
-	"sync"
 
-	"github.com/areias03/metagen/api/db"
+	"github.com/areias03/metagen/api/tui"
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 )
 
-var wg sync.WaitGroup
-
-func defineQuery(term string, url string) string {
-	var query string = strings.ReplaceAll(url, "item", term)
-	return query
-}
-
-func processQuery(query string) {
-	resp, err := http.Get(query)
-	if err != nil {
-		log.Fatal(err)
-	}
-	if resp.StatusCode != http.StatusOK || resp.ContentLength != -1 {
-		fmt.Println(query, "\t", "Not found!")
-	} else {
-		fmt.Println(query, "\t", "Found!")
-	}
-	wg.Done()
-}
-
-func searchDBs(item string, dbs db.Databases) {
-	for _, v := range dbs.Databases {
-		var query string = defineQuery(item, v.Url)
-		wg.Add(1)
-		go processQuery(query)
-	}
-	wg.Wait()
+func main() {
 }
 
 // searchCmd represents the search command
 var searchCmd = &cobra.Command{
 	Use:   "search",
-	Short: "A brief description of your command",
+	Short: "Search for an item in all DBs",
 	Long: `A longer description that spans multiple lines and likely contains examples
 	and usage of using your command. For example:
 
@@ -54,22 +22,10 @@ var searchCmd = &cobra.Command{
 	This application is a tool to generate the needed files
 	to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		jsonFile, err := os.Open("config/databases.json")
-		if err != nil {
+		p := tea.NewProgram(tui.InitialInputModel())
+		if _, err := p.Run(); err != nil {
 			log.Fatal(err)
 		}
-		defer jsonFile.Close()
-
-		byteValue, err := io.ReadAll(jsonFile)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		var dbs db.Databases
-		// we unmarshal our byteArray which contains our
-		// jsonFile's content into 'users' which we defined above
-		json.Unmarshal(byteValue, &dbs)
-		searchDBs("SAMN07510030", dbs)
 	},
 }
 
