@@ -26,3 +26,5 @@ type SpireStudy struct {
 	id      string
 	samples []SpireSample
 }
+
+// TODO: function that initializes structs from config

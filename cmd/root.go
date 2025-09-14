@@ -27,6 +27,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// TODO: load TUI from main command
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "metagen",
