@@ -1,9 +1,12 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/areias03/metagen/api/tui"
+	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 )
@@ -22,9 +25,24 @@ var searchCmd = &cobra.Command{
 	This application is a tool to generate the needed files
 	to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		p := tea.NewProgram(tui.InitialInputModel())
-		if _, err := p.Run(); err != nil {
+		ip := tea.NewProgram(tui.InitialInputModel())
+		if _, err := ip.Run(); err != nil {
 			log.Fatal(err)
+		}
+		items := []list.Item{}
+		for _, v := range tui.DBs.Databases {
+			items = append(items, tui.Item{Name: v.Name, Desc: v.Match})
+
+		}
+
+		m := tui.ListModel{List: list.New(items, list.NewDefaultDelegate(), 0, 0)}
+		m.List.Title = "Found Items"
+
+		lp := tea.NewProgram(m, tea.WithAltScreen())
+
+		if _, err := lp.Run(); err != nil {
+			fmt.Println("Error running program:", err)
+			os.Exit(1)
 		}
 	},
 }

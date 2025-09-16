@@ -15,29 +15,29 @@ type (
 	errMsg error
 )
 
-type model struct {
+type InputModel struct {
 	textInput textinput.Model
 	err       error
 }
 
-func InitialInputModel() model {
+func InitialInputModel() InputModel {
 	ti := textinput.New()
 	ti.Placeholder = "Query"
 	ti.Focus()
 	ti.CharLimit = 156
 	ti.Width = 20
 
-	return model{
+	return InputModel{
 		textInput: ti,
 		err:       nil,
 	}
 }
 
-func (m model) Init() tea.Cmd {
+func (m InputModel) Init() tea.Cmd {
 	return textinput.Blink
 }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m InputModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 
 	switch msg := msg.(type) {
@@ -60,7 +60,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m model) View() string {
+func (m InputModel) View() string {
 	return fmt.Sprintf(
 		"Type your search item ID.\n\n%s\n\n%s",
 		m.textInput.View(),

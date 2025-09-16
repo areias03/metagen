@@ -7,8 +7,9 @@ import (
 )
 
 type Database struct {
-	Name string `json:"name"`
-	Url  string `json:"url"`
+	Name  string `json:"name"`
+	Url   string `json:"url"`
+	Match string
 }
 
 type Databases struct {
