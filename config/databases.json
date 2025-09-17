@@ -1,15 +1,15 @@
 {
   "databases" : [
   {
-    "name" : "SPIRE study",
+    "name" : "SPIRE Study",
     "url" : "https://spire.embl.de/api/study/item"
   },
   {
-    "name" : "SPIRE sample",
+    "name" : "SPIRE Sample",
     "url" : "https://spire.embl.de/api/sample/item"
   },
   {
-    "name" : "ENA xml records",
+    "name" : "ENA",
     "url" : "https://www.ebi.ac.uk/ena/browser/api/xml/item"
   },
   {

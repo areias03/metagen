@@ -9,7 +9,7 @@ import (
 type Database struct {
 	Name  string `json:"name"`
 	Url   string `json:"url"`
-	Match string
+	Match int
 }
 
 type Databases struct {
@@ -29,7 +29,7 @@ var (
 // Read the config file from the current directory and marshal
 // into the conf config struct.
 func getConf() *Databases {
-	viper.AddConfigPath("config")
+	viper.AddConfigPath("../../config")
 	viper.SetConfigName("databases")
 	err := viper.ReadInConfig()
 

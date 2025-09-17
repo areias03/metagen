@@ -1,9 +1,6 @@
 package tui
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/areias03/metagen/api/db"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
@@ -48,22 +45,4 @@ func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m ListModel) View() string {
 	return docStyle.Render(m.List.View())
-}
-
-func main() {
-	items := []list.Item{}
-	for _, v := range DBs.Databases {
-		items = append(items, Item{Name: v.Name, Desc: v.Match})
-
-	}
-
-	m := ListModel{List: list.New(items, list.NewDefaultDelegate(), 0, 0)}
-	m.List.Title = "Found Items"
-
-	p := tea.NewProgram(m, tea.WithAltScreen())
-
-	if _, err := p.Run(); err != nil {
-		fmt.Println("Error running program:", err)
-		os.Exit(1)
-	}
 }

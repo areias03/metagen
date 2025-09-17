@@ -1,10 +1,9 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
-	"os"
 
+	"github.com/areias03/metagen/api/db"
 	"github.com/areias03/metagen/api/tui"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
@@ -30,9 +29,13 @@ var searchCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 		items := []list.Item{}
-		for _, v := range tui.DBs.Databases {
-			items = append(items, tui.Item{Name: v.Name, Desc: v.Match})
-
+		for key, value := range db.ResultMap {
+			switch value {
+			case 0:
+				items = append(items, tui.Item{Name: key, Desc: "Not Found"})
+			case 1:
+				items = append(items, tui.Item{Name: key, Desc: "Found"})
+			}
 		}
 
 		m := tui.ListModel{List: list.New(items, list.NewDefaultDelegate(), 0, 0)}
@@ -41,8 +44,7 @@ var searchCmd = &cobra.Command{
 		lp := tea.NewProgram(m, tea.WithAltScreen())
 
 		if _, err := lp.Run(); err != nil {
-			fmt.Println("Error running program:", err)
-			os.Exit(1)
+			log.Fatal(err)
 		}
 	},
 }
