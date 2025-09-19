@@ -4,8 +4,8 @@ import (
 	"log"
 
 	"github.com/areias03/metagen/api/db"
-	"github.com/areias03/metagen/api/tui"
-	"github.com/charmbracelet/bubbles/list"
+	"github.com/areias03/metagen/tui/searchui/listui"
+	"github.com/areias03/metagen/tui/searchui/textinputui"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 )
@@ -24,26 +24,16 @@ var searchCmd = &cobra.Command{
 	This application is a tool to generate the needed files
 	to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		ip := tea.NewProgram(tui.InitialInputModel())
-		if _, err := ip.Run(); err != nil {
+		p := tea.NewProgram(textinputui.InitialInputModel())
+		if _, err := p.Run(); err != nil {
 			log.Fatal(err)
 		}
-		items := []list.Item{}
-		for key, value := range db.ResultMap {
-			switch value {
-			case 0:
-				items = append(items, tui.Item{Name: key, Desc: "Not Found"})
-			case 1:
-				items = append(items, tui.Item{Name: key, Desc: "Found"})
-			}
-		}
 
-		m := tui.ListModel{List: list.New(items, list.NewDefaultDelegate(), 0, 0)}
-		m.List.Title = "Found Items"
+		m := listui.InitialListModel(db.ResultMap)
 
-		lp := tea.NewProgram(m, tea.WithAltScreen())
+		p = tea.NewProgram(m, tea.WithAltScreen())
 
-		if _, err := lp.Run(); err != nil {
+		if _, err := p.Run(); err != nil {
 			log.Fatal(err)
 		}
 	},

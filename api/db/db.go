@@ -2,8 +2,9 @@ package db
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
 	"strings"
+
+	"github.com/spf13/viper"
 )
 
 type Database struct {
@@ -29,8 +30,9 @@ var (
 // Read the config file from the current directory and marshal
 // into the conf config struct.
 func getConf() *Databases {
-	viper.AddConfigPath("../../config")
+	viper.AddConfigPath("config")
 	viper.SetConfigName("databases")
+	viper.SetConfigType("json")
 	err := viper.ReadInConfig()
 
 	if err != nil {
