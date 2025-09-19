@@ -1,10 +1,11 @@
-package tui
+package textinputui
 
 // A simple program demonstrating the text input component from the Bubbles
 // component library.
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/areias03/metagen/api/db"
 	"github.com/charmbracelet/bubbles/textinput"
@@ -44,6 +45,9 @@ func (m InputModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.Type {
 		case tea.KeyEnter:
+			if len(m.textInput.Value()) < 1 {
+				log.Fatalln("Input must be larger than 1 character!")
+			}
 			db.SearchDBs(m.textInput.Value(), **db.Conf)
 			return m, tea.Quit
 		case tea.KeyCtrlC, tea.KeyEsc:
