@@ -30,7 +30,7 @@ func processQuery(db *Database, query string, results chan<- queryResult, wg *sy
 	}
 }
 
-func SearchDBs(item string, dbs Databases) {
+func SearchDBs(item string, dbs *Databases) {
 	for _, v := range dbs.Databases {
 		var query string = v.defineQuery(item)
 		wg.Add(1)

@@ -48,7 +48,7 @@ func (m InputModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if len(m.textInput.Value()) < 1 {
 				log.Fatalln("Input must be larger than 1 character!")
 			}
-			db.SearchDBs(m.textInput.Value(), **db.Conf)
+			db.SearchDBs(m.textInput.Value(), &db.DatabaseConfig)
 			return m, tea.Quit
 		case tea.KeyCtrlC, tea.KeyEsc:
 			return m, tea.Quit

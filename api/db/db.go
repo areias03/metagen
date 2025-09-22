@@ -1,10 +1,7 @@
 package db
 
 import (
-	"fmt"
 	"strings"
-
-	"github.com/spf13/viper"
 )
 
 type Database struct {
@@ -23,35 +20,24 @@ func (db Database) defineQuery(term string) string {
 }
 
 // Create a new config instance.
-var (
-	conf *Databases
-)
-
-// Read the config file from the current directory and marshal
-// into the conf config struct.
-func getConf() *Databases {
-	viper.AddConfigPath("config")
-	viper.SetConfigName("databases")
-	viper.SetConfigType("json")
-	err := viper.ReadInConfig()
-
-	if err != nil {
-		fmt.Printf("%v", err)
-	}
-
-	conf := &Databases{}
-	err = viper.Unmarshal(conf)
-	if err != nil {
-		fmt.Printf("unable to decode into config struct, %v", err)
-	}
-
-	return conf
-}
-
-// Initialization routine.
-func init() {
-	// Retrieve config options.
-	conf = getConf()
-}
-
-var Conf = &conf
+var DatabaseConfig Databases = Databases{[]Database{
+	{
+		Name: "SPIRE Study",
+		Url:  "https://spire.embl.de/api/study/item",
+	},
+	{
+		Name: "SPIRE Sample",
+		Url:  "https://spire.embl.de/api/sample/item",
+	},
+	{
+		Name: "ENA",
+		Url:  "https://www.ebi.ac.uk/ena/browser/api/xml/item",
+	},
+	{
+		Name: "SRA Biosample",
+		Url:  "https://www.ncbi.nlm.nih.gov/biosample/item",
+	},
+	{
+		Name: "SRA Bioproject",
+		Url:  "https://www.ncbi.nlm.nih.gov/bioproject/item",
+	}}}
