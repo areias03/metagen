@@ -1,6 +1,8 @@
-package tui
+package searchui
 
 import (
+	"github.com/areias03/metagen/tui/searchui/listui"
+	"github.com/areias03/metagen/tui/searchui/textinputui"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -28,12 +30,11 @@ func (m SearchModel) Init() tea.Cmd {
 }
 
 func (m SearchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	var cmd tea.Cmd
 	var cmds []tea.Cmd
 	switch msg := msg.(type) {
 	case listui.FindMsg:
 		m.state = searchView
-	case searchui.SelectMsg:
+	case textinputui.SelectMsg:
 		m.state = listView
 	}
 	switch m.state {
