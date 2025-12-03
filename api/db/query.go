@@ -1,6 +1,8 @@
 package db
 
 import (
+	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"sync"
@@ -8,12 +10,18 @@ import (
 
 var (
 	wg        sync.WaitGroup
-	ResultMap = make(map[string]int)
+	ResultMap = make(map[string]MapVal)
 	results   = make(chan queryResult)
 )
 
+type MapVal struct {
+	Status int
+	Stru   any
+}
+
 type queryResult struct {
 	ID     string
+	Struct any
 	Output int
 }
 
@@ -23,10 +31,18 @@ func processQuery(db *Database, query string, results chan<- queryResult, wg *sy
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Request.Response.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(string(body))
+
 	if resp.StatusCode != http.StatusOK || resp.ContentLength != -1 {
 		results <- queryResult{ID: db.Name, Output: 0}
 	} else {
-		results <- queryResult{ID: db.Name, Output: 1}
+		results <- queryResult{ID: db.Name, Struct: db.parseResponse(db.Name, body), Output: 1}
 	}
 }
 
@@ -42,6 +58,6 @@ func SearchDBs(item string, dbs *Databases) {
 	}()
 
 	for res := range results {
-		ResultMap[res.ID] = res.Output
+		ResultMap[res.ID] = MapVal{res.Output, res.Struct}
 	}
 }

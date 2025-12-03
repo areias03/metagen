@@ -41,21 +41,23 @@ func (db *Database) parseResponse(name string, body []byte) error {
 var DatabaseConfig Databases = Databases{[]Database{
 	{
 		Name: "SPIRE Study",
-		Url:  "https://spire.embl.de/api/study/item",
+		Url:  "https://spire.embl.de/spire/api/study/item",
 	},
 	{
 		Name: "SPIRE Sample",
-		Url:  "https://spire.embl.de/api/sample/item",
+		Url:  "https://spire.embl.de/spire/api/sample/item",
 	},
-	{
-		Name: "ENA",
-		Url:  "https://www.ebi.ac.uk/ena/browser/api/xml/item",
-	},
-	{
-		Name: "SRA Biosample",
-		Url:  "https://www.ncbi.nlm.nih.gov/biosample/item",
-	},
-	{
-		Name: "SRA Bioproject",
-		Url:  "https://www.ncbi.nlm.nih.gov/bioproject/item",
-	}}}
+}}
+
+// {
+// 	Name: "ENA",
+// 	Url:  "https://www.ebi.ac.uk/ena/browser/api/xml/item",
+// },
+// {
+// 	Name: "SRA Biosample",
+// 	Url:  "https://www.ncbi.nlm.nih.gov/biosample/item",
+// },
+// {
+// 	Name: "SRA Bioproject",
+// 	Url:  "https://www.ncbi.nlm.nih.gov/bioproject/item",
+// }}}

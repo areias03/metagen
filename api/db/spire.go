@@ -14,11 +14,7 @@ type SpireGenome struct {
 }
 
 type SpireSample struct {
-	Lat          float64  `json:"lat"`
-	Long         float64  `json:"long"`
-	Mags         bool     `json:"mags"`
-	Microntology []string `json:"microntology"`
-	MagsList     []SpireGenome
+	MagsList []SpireGenome
 }
 
 type SpireStudy struct {

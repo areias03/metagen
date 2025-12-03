@@ -1,12 +1,9 @@
 package cmd
 
 import (
-	"log"
-
+	"encoding/json"
+	"fmt"
 	"github.com/areias03/metagen/api/db"
-	"github.com/areias03/metagen/tui/searchui/listui"
-	"github.com/areias03/metagen/tui/searchui/textinputui"
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 )
 
@@ -24,17 +21,11 @@ var searchCmd = &cobra.Command{
 	This application is a tool to generate the needed files
 	to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		p := tea.NewProgram(textinputui.InitialInputModel())
-		if _, err := p.Run(); err != nil {
-			log.Fatal(err)
-		}
-
-		m := listui.InitialListModel(db.ResultMap)
-
-		p = tea.NewProgram(m, tea.WithAltScreen())
-
-		if _, err := p.Run(); err != nil {
-			log.Fatal(err)
+		db.SearchDBs("SAMN07510030", &db.DatabaseConfig)
+		for k, v := range db.ResultMap {
+			jstru, _ := json.Marshal(v.Stru)
+			fmt.Println(k, v.Status)
+			fmt.Println(string(jstru))
 		}
 	},
 }
