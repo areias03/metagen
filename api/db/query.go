@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -32,23 +31,22 @@ func processQuery(db *Database, query string, results chan<- queryResult, wg *sy
 		log.Fatal(err)
 	}
 	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Request.Response.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println(string(body))
-
 	if resp.StatusCode != http.StatusOK || resp.ContentLength != -1 {
 		results <- queryResult{ID: db.Name, Output: 0}
 	} else {
-		results <- queryResult{ID: db.Name, Struct: db.parseResponse(db.Name, body), Output: 1}
+		responseStruct := parseResponse(db.Name, body)
+		results <- queryResult{ID: db.Name, Struct: responseStruct, Output: 1}
 	}
 }
 
 func SearchDBs(item string, dbs *Databases) {
 	for _, v := range dbs.Databases {
-		var query string = v.defineQuery(item)
+		query := v.defineQuery(item)
 		wg.Add(1)
 		go processQuery(&v, query, results, &wg)
 	}

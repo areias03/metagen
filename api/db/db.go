@@ -2,6 +2,7 @@ package db
 
 import (
 	"encoding/json"
+	"log"
 	"strings"
 )
 
@@ -16,24 +17,24 @@ type Databases struct {
 }
 
 func (db *Database) defineQuery(term string) string {
-	var query string = strings.ReplaceAll(db.Url, "item", term)
+	query := strings.ReplaceAll(db.Url, "item", term)
 	return query
 }
 
-func (db *Database) parseResponse(name string, body []byte) error {
+func parseResponse(name string, body []byte) any {
 	switch name {
 	case "SPIRE Study":
 		var resp SpireStudy
-		if err := json.Unmarshal(body, &resp); err != nil {
-			return err
+		if err := json.Unmarshal(body, &resp.Samples); err != nil {
+			log.Fatal(err)
 		}
-		db.ResponseStruct = resp
+		return resp
 	case "SPIRE Sample":
-		var resp SpireSample
-		if err := json.Unmarshal(body, &resp); err != nil {
-			return err
+		var resp SpireSampleGenomes
+		if err := json.Unmarshal(body, &resp.Mags); err != nil {
+			log.Fatal(err)
 		}
-		db.ResponseStruct = resp
+		return resp
 	}
 	return nil
 }

@@ -7,9 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func main() {
-}
-
 // searchCmd represents the search command
 var searchCmd = &cobra.Command{
 	Use:   "search",
@@ -23,8 +20,9 @@ var searchCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		db.SearchDBs("SAMN07510030", &db.DatabaseConfig)
 		for k, v := range db.ResultMap {
-			jstru, _ := json.Marshal(v.Stru)
+			jstru, _ := json.MarshalIndent(v.Stru, "", "    ")
 			fmt.Println(k, v.Status)
+
 			fmt.Println(string(jstru))
 		}
 	},
